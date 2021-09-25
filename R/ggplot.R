@@ -58,7 +58,7 @@ ggdash <- function(){
     get_serverText(plotcopy, inputs, input_names)
   }
   serverScript <- {
-    get_serverScript(serverText)
+    get_serverScript(serverText, input_names)
   }
   runGGDash(uiScript, serverScript)
 }
@@ -81,7 +81,7 @@ runGGDash <- function(uiScript, serverScript)
   # runAppStr <- "shiny::shinyApp(ui = ui, server = server)"
   # eval(parse(text=runAppStr), .GlobalEnv)
 }
-get_serverScript <- function(serverText){
+get_serverScript <- function(serverText, input_names){
   stringr::str_which(
     serverText, "#####"
   ) -> endOfMakecondition
@@ -91,10 +91,17 @@ get_serverScript <- function(serverText){
     makecondition <- serverText[1:endOfMakecondition]
     serverText <- serverText[-c(1:endOfMakecondition)]
   }
+  plotScriptBindingText <-
+    gen_plotScriptBindingText(serverText)
   serverPhrase(
     collapse(makecondition),
-    collapse(serverText)) -> serverScript
+    plotScriptBindingText, serverSupportFns,
+    collapse(serverText),
+    clipbordCopyTextVerbatim(input_names)) -> serverScript
   return(serverScript)
+}
+gen_plotScriptBindingText <- function(serverText){
+  paste0(".plotScript <- '", collapse(serverText),"'")
 }
 
 collapse <- function(str){
@@ -158,33 +165,130 @@ get_inputTag <- function(name, value, isText){
 }
 uiPhrase <- function(uiInputTags){
   glue::glue('library(shiny)
+  library(rclipboard)
   ui <- fluidPage(
-
+    rclipboardSetup(),
     # Application title
     titlePanel("GG Dash, by NTPU Economics Department"),
 
     # Sidebar with a slider input for number of bins
     sidebarLayout(
       sidebarPanel(
-        {uiInputTags}
+        {uiInputTags},
+        uiOutput("clip")
       ),
 
       # Show a plot of the generated distribution
       mainPanel(
-        plotOutput("ggexperiment")
+        plotOutput("ggexperiment"),
+        shiny::textOutput("text")
       )
     )
   )')
 }
-serverPhrase <- function(makecondition,serverText){
+
+'
+updatedPlotScript <- reactive({
+        generate_copyText(.plotScript,
+            binwidth = input$binwidth, fill = input$fill, stroke = input$stroke)
+    })
+    output$text <- renderText({
+        updatedPlotScript()
+    })
+    output$clip <- renderUI({
+        rclipboard::rclipButton("clipbtn", "Copy",
+            updatedPlotScript(),
+            icon("clipboard"))
+    })
+'
+serverPhrase <- function(makecondition,plotScriptBindingText, serverSupportFns, serverText, clipboardScript){
   glue::glue('server <- function(input, output) {
   library(ggplot2)
     <<makecondition>>
+    <<plotScriptBindingText>>
+    <<serverSupportFns>>
     output$ggexperiment <- renderPlot({
   <<serverText>>
     })
+    updatedPlotScript <- reactive({
+        <<clipboardScript>>
+    })
+    output$text <- renderText({
+        updatedPlotScript()
+    })
+    output$clip <- renderUI({
+        rclipboard::rclipButton("clipbtn", "Copy",
+            updatedPlotScript(),
+            icon("clipboard"))
+    })
+
 }
 ', .open="<<", .close=">>")
 }
+collapse_serverText <- function(serverText){
+  paste0(serverText, collapse = "\n")
+}
 
 ggcopy <- function() clipr::read_clip()
+
+
+# makecondition for server ------------------------------------------------
+generate_internalData <- function(){
+  serverSupportFns <- {
+    sfnsLines <- xfun::read_utf8("support/serverMakecondition")
+    paste0(sfnsLines, collapse = "\n")
+  }
+  usethis::use_data(serverSupportFns, internal = T, overwrite = T)
+}
+
+
+generate_copyText <- function(serverText, ...){
+  inputs <- list(...)
+  patterns <- paste0("input\\$", names(inputs))
+  replacements <- create_replacementText(inputs)
+  names(replacements) <- patterns
+  serverText2 <- stringr::str_remove_all(
+    serverText, "#input\\$.+(?=\\\\\\n)"
+  )
+  stringr::str_replace_all(
+    serverText2, replacements
+  )
+}
+create_replacementText <- function(inputs){
+  purrr::map_chr(
+    inputs,
+    ~{
+      if(is.character(.x)){
+        paste0('"', .x, '"')
+      } else {
+        as.character(.x)
+      }
+    })
+}
+
+
+# rclipboard --------------------------------------------------------------
+#
+# clipbordCopyTextVerbatim(input_names)
+# serverAddClipboardScript(input_names)
+
+serverAddClipboardScript <- function(input_names){
+  clipbordCopyText <- clipbordCopyTextVerbatim(input_names)
+glue::glue('  # Add clipboard buttons
+  output$clip <- renderUI({
+    rclipboard::rclipButton("clipbtn", "Copy",
+      <<clipbordCopyText>>,
+      # .plotScript,
+      icon("clipboard"))
+  })', .open="<<", .close=">>")
+}
+
+clipbordCopyTextVerbatim <- function(input_names){
+  argList <- paste(
+    input_names, " = input$", input_names , sep=""
+  )
+  argList <- paste0(argList, collapse = ",\n")
+  glue::glue("generate_copyText(.plotScript,
+  {argList})")
+}
+

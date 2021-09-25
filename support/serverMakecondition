@@ -1,0 +1,23 @@
+    generate_copyText <- function(serverText, ...){
+        inputs <- list(...)
+        patterns <- paste0("input\\$", names(inputs))
+        replacements <- create_replacementText(inputs)
+        names(replacements) <- patterns
+        serverText2 <- stringr::str_remove_all(
+            serverText, "#input\\$.+(?=\\\\\\n)"
+        )
+        stringr::str_replace_all(
+            serverText2, replacements
+        )
+    }
+    create_replacementText <- function(inputs){
+        purrr::map_chr(
+            inputs,
+            ~{
+                if(is.character(.x)){
+                    paste0('"', .x, '"')
+                } else {
+                    as.character(.x)
+                }
+            })
+    }
