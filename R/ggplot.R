@@ -34,7 +34,7 @@ ggdash <- function(){
   }
   inputValues <- {
     stringr::str_extract_all(
-      plotcopy, "[^=\\(,]*(?=\\s*,?\\s*#\\s*input)"
+      plotcopy, "[^=\\(,\\)+]*(?=\\s*,?\\s*#\\s*input)"
     ) %>%
       purrr::map(
         ~{stringr::str_remove_all(.x, "\\s") -> .x2
@@ -124,7 +124,7 @@ get_serverText <- function(plotcopy, inputs, input_names){
   serverText <-
     stringr::str_remove_all(
       str_spaceRemoved,
-      "#[^#]+$")
+      "#input\\$.+$")
   return(serverText)
 }
 
@@ -145,11 +145,16 @@ get_uiText <- function(uiInputTags){
   return(uiText)
 }
 refine_then_collapse_vector <- refine_then_collapse_uiTags <- function(uiInputTags){
-  c(
-    paste0(uiInputTags[1:(length(uiInputTags)-1)], ","),
-    uiInputTags[[length(uiInputTags)]]
-  ) %>%
-    paste0(collapse = "\n") -> uiInputTags_refined
+  if(length(uiInputTags)>1){
+    c(
+      paste0(uiInputTags[1:(length(uiInputTags)-1)], ","),
+      uiInputTags[[length(uiInputTags)]]
+    ) %>%
+      paste0(collapse = "\n") -> uiInputTags_refined
+  } else {
+    uiInputTags_refined <- uiInputTags
+  }
+
   return(uiInputTags_refined)
 }
 
