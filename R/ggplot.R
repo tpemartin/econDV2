@@ -120,7 +120,12 @@ get_serverText <- function(plotcopy, inputs, input_names){
     str_spaceRemoved %>%
       stringr::str_replace(.pattern, .replacement) -> str_spaceRemoved
   }
-  return(str_spaceRemoved)
+
+  serverText <-
+    stringr::str_remove_all(
+      str_spaceRemoved,
+      "#[^#]+$")
+  return(serverText)
 }
 
 sequentialReplaceValueWithInputVerbatim_function <-
@@ -292,3 +297,21 @@ clipbordCopyTextVerbatim <- function(input_names){
   {argList})")
 }
 
+#' Browse ggplot2 layers
+#'
+#' @return
+#' @export
+#'
+#' @examples none
+ggbrowse <- function(){
+  browseURL("https://ggplot2.tidyverse.org/reference/index.html#section-layers")
+}
+#' Browse ggplot aesthetic explanation page
+#'
+#' @return
+#' @export
+#'
+#' @examples none
+ggaes <- function(){
+  browseURL("https://ggplot2.tidyverse.org/articles/ggplot2-specs.html")
+}
