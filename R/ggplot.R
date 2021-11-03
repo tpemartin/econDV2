@@ -320,3 +320,33 @@ ggbrowse <- function(){
 ggaes <- function(){
   browseURL("https://ggplot2.tidyverse.org/articles/ggplot2-specs.html")
 }
+resize_image <- function(path){
+  img <-
+    magick::image_read(path)
+  img_info <-
+    magick::image_info(img)
+  img_info$width
+  img_info$height
+  asp.ratio <-
+    img_info$width / img_info$height
+
+  w0 = 580
+  h0 = 400
+  asp0 = w0/h0
+
+  if(asp0 >= asp.ratio){
+    h=h0
+    w=h*asp.ratio
+  } else {
+    w=w0
+    h=w/asp.ratio
+  }
+  magick::image_scale(
+    img, paste0(w,"x",h)
+  )
+  newpath = stringr::str_replace(path, "\\.(?=[:alpha:]+$)","_resized.")
+  magick::image_write(
+    img, path=newpath
+  )
+
+}
