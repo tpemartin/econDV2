@@ -124,7 +124,8 @@ get_serverText <- function(plotcopy, inputs, input_names){
   serverText <-
     stringr::str_remove_all(
       str_spaceRemoved,
-      "#input\\$.+$")
+      "#input\\$.+$") |>
+    styler::style_text()
   return(serverText)
 }
 
@@ -320,6 +321,14 @@ ggbrowse <- function(){
 ggaes <- function(){
   browseURL("https://ggplot2.tidyverse.org/articles/ggplot2-specs.html")
 }
+#' Resize image to fit github issue
+#'
+#' @param path a file path to the image
+#'
+#' @return
+#' @export
+#'
+#' @examples none
 resize_image <- function(path){
   img <-
     magick::image_read(path)
