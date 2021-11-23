@@ -10,9 +10,11 @@ githublink_download_open <- function(){
   do.call("file.path", list("https://raw.githubusercontent.com", linkInfo[[1]][[1]], linkInfo[[1]][[2]])) -> rawlink
 
   filename = basename(rawlink)
+  if(!dir.exists("temp")) dir.create("temp")
+  filepath = file.path("temp", filename)
   xfun::download_file(
     rawlink, mode="wb",
-    output= tempdir() %//% filename
+    output= filepath
   )
-  file.edit(tempdir() %//% filename)
+  file.edit(filepath)
 }
