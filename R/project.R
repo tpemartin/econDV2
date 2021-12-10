@@ -10,6 +10,10 @@ Object <- function(objectname){
   chr_objname <- expr_objname <- rlang::enexpr(objectname)
   # browser()
   chr_objname <- rlang::expr_deparse(expr_objname)
+  if(exists(chr_objname)){
+    readline(message(chr_objname, " exists. Do you want to overwrite it? (yes/no)")) -> overwrite
+    if(overwrite!="yes") return()
+  }
   flag_chr <- stringr::str_detect(chr_objname,"\"")
   if(flag_chr) {
     chr_objname |> stringr::str_remove_all("\"") -> chr_objname
