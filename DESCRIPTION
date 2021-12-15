@@ -1,7 +1,7 @@
 Package: econDV2
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.2.0
+Version: 0.2.1
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
@@ -11,6 +11,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
 Imports: 
+    dplyr,
     ggplot2,
     glue,
     magrittr,
@@ -19,4 +20,4 @@ Imports:
     stringr,
     styler
 Depends: 
-    R (>= 2.10)
+    R (>= 4.1.0)

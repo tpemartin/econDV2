@@ -2,6 +2,7 @@
 
 export(Object)
 export(axis_x_custom)
+export(find_switchingPoint)
 export(geom_sec_axis)
 export(ggaes)
 export(ggbrowse)

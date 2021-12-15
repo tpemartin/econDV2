@@ -24,7 +24,7 @@ protectStringWithSpaces <- function(origin) {
      stringNeedsProtection, protectors[1:length(stringNeedsProtection)]
   )
 
-  stringr::str_replace_all(origin, coll(replacePattern), replacePattern) -> replacedString
+  stringr::str_replace_all(origin, stringr::coll(replacePattern), replacePattern) -> replacedString
   list(
      replacedString=replacedString,
      reverseReplacePattern=reverseReplacePattern
