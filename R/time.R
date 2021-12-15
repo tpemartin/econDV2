@@ -7,7 +7,7 @@
 #'
 #' @examples none
 find_switchingPoint <- function(.df){
-  .preSwitchingDates <-  
+  .preSwitchingDates <-
     get_preswitchingDates(.df)
   purrr::map_dfr(
     .preSwitchingDates,
@@ -16,13 +16,11 @@ find_switchingPoint <- function(.df){
 }
 library(lubridate)
 intersect_datetimeX_numericY <- function(.df, x0) {
-  dx=dx
-  x1=x0+dx
   whichIsPreswitching <- (.df$x == x0) |> which()
   whichIsPreswitching
   .df[c(0,1)+whichIsPreswitching, ] -> .dfX
   .dfX$x |> lubridate::as_datetime() |> as.double() -> timeInDouble
-  ab1=get_ab(timeInDouble, .dfX$y)  
+  ab1=get_ab(timeInDouble, .dfX$y)
   ab2=get_ab(timeInDouble, .dfX$y2)
   solution_x <- (ab1[["a"]]-ab2[["a"]])/(ab2[["b"]]-ab1[["b"]])
   solution_y <- ab1[["a"]]+ab1[["b"]]*solution_x
@@ -43,7 +41,7 @@ get_ab <- function(x,y){
   c(a=a, b=b)
 }
 get_preswitchingDates <- function(.df){
-  .df |> 
+  .df |>
     mutate(
       lead_y=dplyr::lead(y),
       lead_y2=dplyr::lead(y2),
