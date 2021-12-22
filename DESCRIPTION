@@ -16,6 +16,7 @@ Imports:
     glue,
     magrittr,
     purrr,
+    rlang,
     shiny,
     stringr,
     styler
