@@ -11,7 +11,9 @@ getStringsNeedProtection <- function(string) {
 protectStringWithSpaces <- function(origin) {
   origin |>
       getStringsNeedProtection() -> stringNeedsProtection
-   protectors <- paste0("..",LETTERS,"..", sep="")
+  protection_list <- list()
+  if(length(stringNeedsProtection)!=0){
+     protectors <- paste0("..",LETTERS,"..", sep="")
    if(length(stringNeedsProtection) > length(LETTERS)){
       rounds = ceiling(length(stringNeedsProtection)/length(LETTERS))
       protectors <-
@@ -25,10 +27,12 @@ protectStringWithSpaces <- function(origin) {
   )
 
   stringr::str_replace_all(origin, stringr::coll(replacePattern), replacePattern) -> replacedString
-  list(
+  protection_list <- list(
      replacedString=replacedString,
      reverseReplacePattern=reverseReplacePattern
   )
+  }
+  return(protection_list)
 }
 
 # clipr::read_clip() -> origin

@@ -111,7 +111,9 @@ collapse <- function(str){
 get_serverText <- function(plotcopy, inputs, input_names){
   plotcopy %>%
     protectStringWithSpaces() -> protectedPlotCopy
-  plotcopy = protectedPlotCopy$replacedString
+  if(length(protectedPlotCopy)!=0){
+    plotcopy = protectedPlotCopy$replacedString
+  }
   plotcopy |>
     stringr::str_remove_all("\\s") -> str_spaceRemoved
 
@@ -127,11 +129,16 @@ get_serverText <- function(plotcopy, inputs, input_names){
   serverText <-
     stringr::str_remove_all(
       str_spaceRemoved,
-      "#input\\$.+$") |>
-    stringr::str_replace_all(
-      protectedPlotCopy$reverseReplacePattern
-    ) |>
-    styler::style_text()
+      "#input\\$.+$")
+  if(length(protectedPlotCopy)!=0){
+    serverText |>
+      stringr::str_replace_all(
+        protectedPlotCopy$reverseReplacePattern
+      ) -> serverText
+  }
+
+  serverText |>
+    styler::style_text() -> serverText
   return(serverText)
 }
 
