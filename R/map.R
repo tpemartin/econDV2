@@ -27,6 +27,7 @@ Map <- function(){
     colorspace::choose_palette(gui="shiny") ->
       map$palettte
   }
+  map$choose_color <- choose_color(map)
   map$convert_colorHex2hsl <- function(colors){
     colors <- tolower(colors)
     farver::decode_colour(colors, alpha = TRUE, to = "hsl",
@@ -137,3 +138,15 @@ osm_request_data <- function(bbox, features) {
   request |> osmdata::osmdata_sf() -> sf_data
   return(sf_data)
 }
+choose_color <- function(map){
+  function(from_clipboard=T){
+    if(from_clipboard){
+      clipr::read_clip() -> colx
+    } else {
+      colorspace::choose_color() -> colx
+    }
+    farver::decode_colour(colx, to="hcl") -> col_hcl
+    map$color <- as.data.frame(col_hcl)
+  }
+}
+
