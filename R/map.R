@@ -19,9 +19,10 @@ Map <- function(){
   map$copy_paste$google_location_zoom <- generate_google_locationZoom
   map$copy_paste$osm_bbox <- generate_bbox
 
-  map$prepare_dataframe_from$map <- prepareDF4geom
+  map$get_worldmap <- get_worldmapWithIso
 
   map$choropleth$rename_valueData_countryname <- rename_countries
+
   map$scales$scale_fill_ordered_factor <- scale_fill_ordered_factor
   map$choose_palette <- function(){
     colorspace::choose_palette(gui="shiny") ->
@@ -36,6 +37,8 @@ Map <- function(){
   map$extract$googleMapLocation <-  extract_googleMapLocation
   map$extract$osmBBox <- extract_osmBBox
   map$osm$request_data <- osm_request_data
+  map$sf$simplify <- simplify
+  map$sf$gg_crop <- ggcrop
   return(map)
 }
 generate_google_locationZoom <- function(){
@@ -149,4 +152,104 @@ choose_color <- function(map){
     map$color <- as.data.frame(col_hcl)
   }
 }
+get_worldmapWithIso <- function(){
+  world <- ggplot2::map_data("world")
+  world |>
+    dplyr::left_join(
+      maps::iso3166,
+      by=c("region"="sovereignty")
+    )
 
+}
+simplify <- function(.sf){
+  sf::as_Spatial(.sf) |>
+    rmapshaper::ms_simplify() -> .simple
+  .simple |>
+    sf::st_as_sf() -> .simple
+  return(.simple)
+}
+ggcrop <- function(.sf){
+  expr_sf <- rlang::enexpr(.sf)
+
+  sfname <- expr_sf |>
+    rlang::expr_deparse()
+
+  rlang::eval_bare(rlang::expr(.sf <- !!expr_sf), env=.GlobalEnv)
+  .GlobalEnv$.sf |> sf::st_bbox() -> bbox
+
+  codes <- c("xmin={bbox[['xmin']]} #input$xmin",
+    "xmax={bbox[['xmax']]} #input$xmax",
+    "ymin={bbox[['ymin']]} #input$ymin",
+    "ymax={bbox[['ymax']]} #input$ymax",
+    "{sfname} |>",
+    "  sf::st_crop(",
+    "    c(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)",
+    "  ) |> ",
+    " ggplot() + geom_sf(",
+    '    fill="#c8c5be",',
+    '    color="#c8c5be",',
+    '    size=0)')
+  codes <- codes |> paste(collapse = "\n")
+  glue_codes <- glue::glue(codes)
+  glue_codes |> stringr::str_split("\\n") |>
+    unlist() -> plotcopy
+
+  # plotcopy <-
+  #   glue::glue('xmin={bbox[["xmin"]]} #input$xmin\n
+  # xmax={bbox[["xmax"]]} #input$xmax\n
+  # ymin={bbox[["ymin"]]} #input$ymin\n
+  # ymax={bbox[["ymax"]]} #input$ymax\n
+  # {sfname} |>\n
+  #   sf::st_crop(\n
+  #     c(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)\n
+  #   ) |>\n
+  #   ggplot() + geom_sf(\n
+  #     fill="#c8c5be",\n
+  #     color="#c8c5be",\n
+  #     size=0)')
+  require(magrittr)
+  inputs <- {
+    stringr::str_remove_all(
+      plotcopy, "\\s"
+    ) %>%
+      stringr::str_extract_all("(?<=#)input\\$.+") %>%
+      unlist()
+  }
+  input_names <- {
+    purrr::map_chr(
+      inputs,
+      ~{
+        stringr::str_extract(.x, "(?<=\\$).*")
+      }
+    )
+  }
+  inputValues <- {
+    stringr::str_extract_all(
+      plotcopy, "[^=\\(,\\)+]*(?=\\s*,?\\s*#\\s*input)"
+    ) %>%
+      purrr::map(
+        ~{stringr::str_remove_all(.x, "\\s") -> .x2
+          subset(.x2, .x2!="")}
+      ) %>%
+      unlist()
+  }
+  inputValueIsText <- {
+    stringr::str_detect(
+      inputValues,
+      #inputValues[[5]][[1]],
+      "[\"']")
+  }
+  uiInputTags <- {
+    get_UItags(input_names, inputValues, inputValueIsText)
+  }
+  uiScript <- {
+    get_uiText(uiInputTags)
+  }
+  serverText <- {
+    get_serverText(plotcopy, inputs, input_names)
+  }
+  serverScript <- {
+    get_serverScript(serverText, input_names)
+  }
+  runGGDash(uiScript, serverScript)
+}
