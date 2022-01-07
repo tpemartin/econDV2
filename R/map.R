@@ -39,6 +39,7 @@ Map <- function(){
   map$osm$request_data <- osm_request_data
   map$sf$simplify <- simplify
   map$sf$gg_crop <- ggcrop
+  map$sf$make_background_map <- make_backgroundMap
   return(map)
 }
 generate_google_locationZoom <- function(){
@@ -252,4 +253,14 @@ ggcrop <- function(.sf){
     get_serverScript(serverText, input_names)
   }
   runGGDash(uiScript, serverScript)
+}
+make_backgroundMap <- function(.sf,fill = "#c8c5be",
+  color = "#c8c5be",
+  size = 0){
+  .sf |> ggplot() +
+    geom_sf(
+      fill = fill,
+      color = color,
+      size = size
+    )
 }
