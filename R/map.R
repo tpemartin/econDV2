@@ -3,7 +3,7 @@
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples none
 Map <- function(){
   require(ggmap)
   map <- new.env()
