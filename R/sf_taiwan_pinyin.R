@@ -1,36 +1,25 @@
 
-# dropboxurl_county = "https://www.dropbox.com/s/qiuvzf0y027azez/mapping_county.json?dl=1"
-# dropboxurl_township = "https://www.dropbox.com/s/zsmtshyx0y5e7g0/mapping_township.json?dl=1"
-#
+dropboxurl_county = "https://www.dropbox.com/s/qiuvzf0y027azez/mapping_county.json?dl=1"
+dropboxurl_township = "https://www.dropbox.com/s/zsmtshyx0y5e7g0/mapping_township.json?dl=1"
 
-translate_map_id_en <- function(dropboxurl, mapping_name) {
+
+translate_county_map_id <-
+  translate_map_id_en(dropboxurl = dropboxurl_county)
+translate_township_map_id <-
+  translate_map_id_en(dropboxurl = dropboxurl_township)
+translate_map_id_en <- function(dropboxurl) {
   function(sf){
-    if(!exists(".map_id", envir=.GlobalEnv)){
-      .GlobalEnv[[".map_id"]] = list()
-      if(is.null(.GlobalEnv$.map_id[[mapping_name]])){
-        .GlobalEnv[[".map_id"]][[mapping_name]] = jsonlite::fromJSON(dropboxurl)
-      }
-    }
-    # browser()
+    mapping = jsonlite::fromJSON(dropboxurl)
     sf$map_id <- NULL
-    mapping_table = .map_id[[mapping_name]]$map_id
-    names(mapping_table)=.map_id[[mapping_name]]$map_id_en
-    sf$map_id <- mapping_table[sf$map_id_en]
-
-    return(sf)
+    sf |>
+      dplyr::left_join(mapping, by="map_id_en")
   }
 }
-translate_county_map_id <-
-  translate_map_id_en(dropboxurl = "https://www.dropbox.com/s/qiuvzf0y027azez/mapping_county.json?dl=1",
-    mapping_name="county_mapping")
-translate_township_map_id <-
-  translate_map_id_en(dropboxurl = "https://www.dropbox.com/s/zsmtshyx0y5e7g0/mapping_township.json?dl=1",
-    mapping_name="township_mapping")
 
-# sf_taiwan_simplified |>
-#   convert_sf_taiwan_simplified_to_fully_en() -> sf_taiwan_simplified
-#
-# .sf |> generate_mapping_json()
+sf_taiwan_simplified |>
+  convert_sf_taiwan_simplified_to_fully_en() -> sf_taiwan_simplified
+
+.sf |> generate_mapping_json()
 
 generate_mapping_json <- function(.sf){
 
