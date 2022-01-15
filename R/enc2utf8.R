@@ -15,4 +15,4 @@ get_sf_taiwan4windows <- function(){
     purrr::map(enc2utf8_all) -> sf_taiwan_simplified[[3]]
   return(sf_taiwan_simplified)
 }
-sf_taiwan_simplified <- get_sf_taiwan4windows()
+# sf_taiwan_simplified <- get_sf_taiwan4windows()
