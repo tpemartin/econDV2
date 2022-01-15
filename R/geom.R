@@ -70,7 +70,7 @@ geom_sf_taiwan <- function(data, map_id, ...,
   background.color= "#c8c5be",
   background.size= 0
 ) {
-
+  sf_taiwan_simplified <- get_sf_taiwan4windows()
   type = match.arg(type)
   .sf=sf_taiwan_simplified[["台灣本島"]][[type]]
 
