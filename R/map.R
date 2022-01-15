@@ -40,6 +40,7 @@ Map <- function(){
   map$sf$simplify <- simplify
   map$sf$gg_crop <- ggcrop
   map$sf$make_background_map <- make_backgroundMap
+  map$sf$get_sf_taiwan_simplified <- get_sf_taiwan_simplified
   return(map)
 }
 generate_google_locationZoom <- function(){
