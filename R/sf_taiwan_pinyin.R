@@ -2,11 +2,6 @@
 dropboxurl_county = "https://www.dropbox.com/s/qiuvzf0y027azez/mapping_county.json?dl=1"
 dropboxurl_township = "https://www.dropbox.com/s/zsmtshyx0y5e7g0/mapping_township.json?dl=1"
 
-
-translate_county_map_id <-
-  translate_map_id_en(dropboxurl = dropboxurl_county)
-translate_township_map_id <-
-  translate_map_id_en(dropboxurl = dropboxurl_township)
 translate_map_id_en <- function(dropboxurl) {
   function(sf){
     mapping = jsonlite::fromJSON(dropboxurl)
@@ -16,10 +11,15 @@ translate_map_id_en <- function(dropboxurl) {
   }
 }
 
-sf_taiwan_simplified |>
-  convert_sf_taiwan_simplified_to_fully_en() -> sf_taiwan_simplified
+translate_county_map_id <-
+  translate_map_id_en(dropboxurl = dropboxurl_county)
+translate_township_map_id <-
+  translate_map_id_en(dropboxurl = dropboxurl_township)
 
-.sf |> generate_mapping_json()
+# sf_taiwan_simplified |>
+#   convert_sf_taiwan_simplified_to_fully_en() -> sf_taiwan_simplified
+
+# .sf |> generate_mapping_json()
 
 generate_mapping_json <- function(.sf){
 
