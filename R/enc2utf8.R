@@ -14,6 +14,15 @@ get_sf_taiwan4windows <- function(){
 
   sf_taiwan_simplified[[3]] |>
     purrr::map(enc2utf8_all) -> sf_taiwan_simplified[[3]]
+
+  sf_taiwan_simplified[[1]] |>
+    sf::st_as_sf() -> sf_taiwan_simplified[[1]]
+  sf_taiwan_simplified[[2]] |>
+    sf::st_as_sf() -> sf_taiwan_simplified[[2]]
+  sf_taiwan_simplified[[3]][[1]] |>
+    sf::st_as_sf() -> sf_taiwan_simplified[[3]][[1]]
+  sf_taiwan_simplified[[3]][[2]] |>
+    sf::st_as_sf() -> sf_taiwan_simplified[[3]][[2]]
   return(sf_taiwan_simplified)
 }
 # sf_taiwan_simplified <- get_sf_taiwan4windows()
