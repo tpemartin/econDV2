@@ -9,10 +9,12 @@ geom_sf_taiwan(
   map_id,
   ...,
   type = c("縣市", "鄉鎮區"),
+  cast2multipolygon = T,
+  merge_type = "joint",
+  need_background = T,
   background.fill = "#c8c5be",
   background.color = "#c8c5be",
-  background.size = 0,
-  cast2multipolygon = T
+  background.size = 0
 )
 }
 \arguments{
@@ -23,6 +25,10 @@ geom_sf_taiwan(
 \item{...}{other parameters passed to geom_sf}
 
 \item{type}{either "縣市" or "鄉鎮區"}
+
+\item{merge_type}{default="joint". "join" means sf inner_join data, "map" means sf left_join data, "data" means sf right_join data}
+
+\item{need_background}{default is TRUE. If FALSE, just return the choropleth layer.}
 
 \item{background.fill}{the fille of background Taiwan map}
 

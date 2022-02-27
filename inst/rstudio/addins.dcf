@@ -1,10 +1,15 @@
-Name: create ggdash
-Description: New Addin Description
-Binding: ggdash
-Interactive: false
-
 Name: Download github link
 Description: New Addin Description
 Binding: githublink_download_open
+Interactive: false
+
+Name: Update package
+Description: New Addin Description
+Binding: install_econDV2
+Interactive: false
+
+Name: Setup environment
+Description: New Addin Description
+Binding: setup_environment
 Interactive: false
 

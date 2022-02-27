@@ -1,3 +1,16 @@
+#' Setup environment including .Rprofile
+#'
+#' @return
+#' @export
+#'
+#' @examples none
+setup_environment <- function(){
+  create_project_if_necessary() -> projectPath
+
+  econDV2::rprofile_content |>
+    write_Rprofile(path=projectPath)
+  rstudioapi::openProject(projectPath)
+}
 #' Create an package mainenance instance
 #'
 #' @return
@@ -14,7 +27,7 @@ Maintenance <- function(){
 }
 
 install_econDV2 <- function(){
-  devtools::install_github("tpemartin/econDV2", force=T)
+  remotes::install_github("tpemartin/econDV2", force=T)
 }
 fix_chineseEncoding <- function(){
 
