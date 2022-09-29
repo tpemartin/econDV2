@@ -13,3 +13,8 @@ Description: New Addin Description
 Binding: setup_environment
 Interactive: false
 
+Name: Extract ipynb codes
+Description: New Addin Description
+Binding: extract_ipynbCodesFromClipboardUrl
+Interactive: false
+

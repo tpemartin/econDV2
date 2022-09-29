@@ -1,0 +1,38 @@
+---
+title: "期末專題"
+author: "林茂廷"
+date: "1/19/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = T, warning = F, message = F, 
+  fig.showtext=T)
+library(ggplot2)
+library(showtext)
+sysfonts::font_add_google('Noto Sans TC')
+showtext_auto()
+theme_set(
+  theme(
+    text=element_text(family = "Noto Sans TC")
+  )+
+    theme_classic()
+)
+
+source("graph.R")
+```
+
+  * `fig.showtext = T` for chinese characters 
+
+## 台灣圖像
+
+以#開頭表示heading（標題效果）從一個#到六個#共有6種標題大小可用。
+
+```{r backgroup, cache=T, fig.align="center", fig.cap="台灣底圖", fig.width=2}
+graph1= readRDS("graph1.Rds")
+graph1
+```
+
+  * `fig.cap` 會形成圖片標題。
+  
+  * 更多rmarkdown 設定可見： <https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf?_ga=2.60784493.1170041250.1642857027-1916419350.1640609070>

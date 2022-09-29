@@ -1,0 +1,52 @@
+---
+title: "期末專題"
+author: "OOO"
+date: "6/30/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = T, warning = F, message = F, 
+  fig.showtext=T)
+library(ggplot2)
+library(showtext)
+sysfonts::font_add_google('Noto Sans TC')
+showtext_auto()
+theme_set(
+  theme(
+    text=element_text(family = "Noto Sans TC")
+  )+
+    theme_classic()
+)
+
+source("graph.R")
+```
+
+  * `fig.showtext = T` for chinese characters 
+
+## graph1
+
+
+```{r graph1, cache=T, fig.align="center", fig.cap="圖1", fig.width=2}
+graph1= readRDS("graph1.Rds")
+graph1
+```
+
+ ...
+ 
+## graph2
+
+
+```{r graph2, cache=T, fig.align="center", fig.cap="圖2", fig.width=2}
+graph2= readRDS("graph2.Rds")
+graph2
+```
+
+## graph3
+
+
+```{r graph3, cache=T, fig.align="center", fig.cap="圖3", fig.width=2}
+graph3= readRDS("graph3.Rds")
+graph3
+```
+
