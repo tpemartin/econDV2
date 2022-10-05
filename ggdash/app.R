@@ -19,9 +19,13 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-            shiny::numericInput("binwidth","binwidth", 1.5),
+          shiny::numericInput("plotWidth","plotWidth", 500),
+          shiny::numericInput("plotHeight","plotHeight", 500),
+
+          shiny::numericInput("binwidth","binwidth", 1.5),
             shiny::textInput("fill","fill", "white"),
             shiny::numericInput("stroke","stroke", 2),
+
             uiOutput("clip")
 
         ),
@@ -60,7 +64,7 @@ server <- function(input, output) {
     output$ggexperiment <- renderPlot({
         ggplot(mtcars, aes(x = mpg)) + geom_dotplot(binwidth = input$binwidth,
             fill = input$fill, stroke = input$stroke)
-    })
+    }, width=reactive(input$plotWidth), height=reactive(input$plotHeight))
     updatedPlotScript <- reactive({
         generate_copyText(.plotScript,
             binwidth = input$binwidth, fill = input$fill, stroke = input$stroke)

@@ -198,6 +198,9 @@ uiPhrase <- function(uiInputTags){
     # Sidebar with a slider input for number of bins
     sidebarLayout(
       sidebarPanel(
+        shiny::numericInput("plotWidth","plotWidth", 500),
+        shiny::numericInput("plotHeight","plotHeight", 500),
+
         {uiInputTags},
         uiOutput("clip")
       ),
@@ -233,7 +236,7 @@ serverPhrase <- function(makecondition,plotScriptBindingText, serverSupportFns, 
     <<serverSupportFns>>
     output$ggexperiment <- renderPlot({
   <<serverText>>
-    })
+    }, width=reactive(input$plotWidth), height=reactive(input$plotHeight))
     updatedPlotScript <- reactive({
         <<clipboardScript>>
     })
