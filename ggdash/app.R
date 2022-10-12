@@ -24,9 +24,9 @@ ui <- fluidPage(
 
           shiny::numericInput("binwidth","binwidth", 1.5),
             shiny::textInput("fill","fill", "white"),
-            shiny::numericInput("stroke","stroke", 2),
+            shiny::numericInput("stroke","stroke", 2)#,
 
-            uiOutput("clip")
+            # uiOutput("clip")
 
         ),
 
@@ -72,11 +72,11 @@ server <- function(input, output) {
     output$text <- renderText({
         updatedPlotScript()
     })
-    output$clip <- renderUI({
-        rclipboard::rclipButton("clipbtn", "Copy",
-            updatedPlotScript(),
-            icon("clipboard"))
-    })
+    # output$clip <- renderUI({
+    #     rclipboard::rclipButton("clipbtn", "Copy",
+    #         updatedPlotScript(),
+    #         icon("clipboard"))
+    # })
 }
 # {
 #         library(ggplot2)

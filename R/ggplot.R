@@ -202,32 +202,19 @@ uiPhrase <- function(uiInputTags){
         shiny::numericInput("plotHeight","plotHeight", 500),
 
         {uiInputTags},
-        uiOutput("clip")
+        shiny::uiOutput("text")#,
+        #uiOutput("clip")
       ),
 
       # Show a plot of the generated distribution
       mainPanel(
-        plotOutput("ggexperiment"),
-        shiny::textOutput("text")
+
+        plotOutput("ggexperiment")
       )
     )
   )')
 }
 
-'
-updatedPlotScript <- reactive({
-        generate_copyText(.plotScript,
-            binwidth = input$binwidth, fill = input$fill, stroke = input$stroke)
-    })
-    output$text <- renderText({
-        updatedPlotScript()
-    })
-    output$clip <- renderUI({
-        rclipboard::rclipButton("clipbtn", "Copy",
-            updatedPlotScript(),
-            icon("clipboard"))
-    })
-'
 serverPhrase <- function(makecondition,plotScriptBindingText, serverSupportFns, serverText, clipboardScript){
   glue::glue('server <- function(input, output) {
   library(ggplot2)
@@ -240,14 +227,19 @@ serverPhrase <- function(makecondition,plotScriptBindingText, serverSupportFns, 
     updatedPlotScript <- reactive({
         <<clipboardScript>>
     })
-    output$text <- renderText({
-        updatedPlotScript()
+    output$text <- renderUI({
+
+        updatedPlotScript() |>
+        stringr::str_replace_all("\n","<br>") -> .text
+        htmltools::HTML(
+        {markdown::markdownToHTML(text=.text, fragment.only=T) |>
+        stringr::str_remove_all("</?(pre|code)>")})
     })
-    output$clip <- renderUI({
-        rclipboard::rclipButton("clipbtn", "Copy",
-            updatedPlotScript(),
-            icon("clipboard"))
-    })
+    #output$clip <- renderUI({
+    #    rclipboard::rclipButton("clipbtn", "Copy",
+    #        updatedPlotScript(),
+    #        icon("clipboard"))
+    #})
 
 }
 ', .open="<<", .close=">>")

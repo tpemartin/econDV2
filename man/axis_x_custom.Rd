@@ -9,9 +9,6 @@ axis_x_custom(scale_x)
 \arguments{
 \item{scale_x}{a scale_x function}
 }
-\value{
-
-}
 \description{
 Generate scale_x function with flexible ticks and labels setting
 }

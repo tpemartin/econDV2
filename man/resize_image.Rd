@@ -9,9 +9,6 @@ resize_image(path)
 \arguments{
 \item{path}{a file path to the image}
 }
-\value{
-
-}
 \description{
 Resize image to fit github issue
 }

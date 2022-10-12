@@ -6,9 +6,6 @@
 \usage{
 ggaes()
 }
-\value{
-
-}
 \description{
 Browse ggplot aesthetic explanation page
 }
