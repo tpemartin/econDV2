@@ -23,3 +23,8 @@ Description: New Addin Description
 Binding: convertActivePy2R
 Interactive: false
 
+Name: Turn on jpnb local runtime
+Description: New Addin Description
+Binding: serveJupyterNotebook
+Interactive: false
+

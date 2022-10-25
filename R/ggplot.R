@@ -68,9 +68,10 @@ ggdash <- function(){
 
 runGGDash <- function(uiScript, serverScript)
 {
-  uiScript %>%
+  if(uiScript !="NULL"){
+    uiScript %>%
     str2expression() %>%
-    eval(envir = .GlobalEnv)
+    eval(envir = .GlobalEnv)}
   serverScript %>%
     str2expression() %>%
     eval(envir = .GlobalEnv)
@@ -91,14 +92,23 @@ get_serverScript <- function(serverText, input_names){
     makecondition <- serverText[1:endOfMakecondition]
     serverText <- serverText[-c(1:endOfMakecondition)]
   }
+
   plotScriptBindingText <-
     gen_plotScriptBindingText(serverText)
   serverPhrase(
     collapse(makecondition),
     plotScriptBindingText, serverSupportFns,
     collapse(serverText),
-    clipbordCopyTextVerbatim(input_names)) -> serverScript
+    getUpdateScript(input_names)
+    ) -> serverScript
   return(serverScript)
+}
+getUpdateScript = function(input_names){
+  if(length(input_names)==0){
+    ".plotScript"
+  } else {
+    clipbordCopyTextVerbatim(input_names)
+  }
 }
 gen_plotScriptBindingText <- function(serverText){
   paste0(".plotScript <- '", collapse(serverText),"'")
@@ -133,7 +143,7 @@ get_serverText <- function(plotcopy, inputs, input_names){
   if(length(protectedPlotCopy)!=0){
     serverText |>
       stringr::str_replace_all(
-        protectedPlotCopy$reverseReplacePattern
+        stringr::fixed(protectedPlotCopy$reverseReplacePattern)
       ) -> serverText
   }
 
@@ -154,6 +164,7 @@ sequentialReplaceValueWithInputVerbatim_function <-
     }
   }
 get_uiText <- function(uiInputTags){
+  if(is.null(uiInputTags)) return(uiPhrase("htmltools::tags$div()"))
   uiInputTags_refined <- refine_then_collapse_uiTags(uiInputTags)
   uiText <- uiPhrase(uiInputTags_refined)
   return(uiText)

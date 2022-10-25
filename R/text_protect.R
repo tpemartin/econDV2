@@ -1,16 +1,24 @@
 # labs( title='The Industry of All Non-U.S. Issuers',
 getStringsNeedProtection <- function(string) {
-  pattern_strProtect = "(?<=\")[^\"]*(?=\")|(?<=')[^\"]*(?=')"
+  pattern_strProtect = "(?<=\")[^\"]*(?=\")|(?<=')[^\"]*(?=')|(?<=`)[^`]+(?=`)"
   stringr::str_extract_all(
      string,
      pattern_strProtect
   ) -> strNeedsProtection
-  strNeedsProtection |> unlist() |> unique()
+  stringr::str_which(
+    string,
+    pattern_strProtect
+  ) -> strWhichNeedsProtection
+  strNeedsProtection |> unlist() |> unique() -> stringNeedsProtection
+  return(list(pattern=stringNeedsProtection, index=strWhichNeedsProtection))
 }
 
 protectStringWithSpaces <- function(origin) {
   origin |>
-      getStringsNeedProtection() -> stringNeedsProtection
+      getStringsNeedProtection() -> Protect
+
+  Protect$pattern -> stringNeedsProtection
+  Protect$index -> whereInStringNeedsProtection
   protection_list <- list()
   if(length(stringNeedsProtection)!=0){
      protectors <- paste0("..",LETTERS,"..", sep="")
@@ -26,7 +34,8 @@ protectStringWithSpaces <- function(origin) {
      stringNeedsProtection, protectors[1:length(stringNeedsProtection)]
   )
 
-  stringr::str_replace_all(origin, stringr::coll(replacePattern), replacePattern) -> replacedString
+  stringr::str_replace_all(origin[whereInStringNeedsProtection], stringr::coll(replacePattern), replacePattern) -> origin[whereInStringNeedsProtection]
+  origin -> replacedString
   protection_list <- list(
      replacedString=replacedString,
      reverseReplacePattern=reverseReplacePattern
