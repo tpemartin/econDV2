@@ -3,6 +3,7 @@
 export(Maintenance)
 export(Map)
 export(Object)
+export(Plot)
 export(attachPlot)
 export(axis_x_custom)
 export(find_switchingPoint)

@@ -5,6 +5,9 @@ getStringsNeedProtection <- function(string) {
      string,
      pattern_strProtect
   ) -> strNeedsProtection
+  # remove c("a", "b") case which ", " is picked wrongly
+  stringr::str_subset(unlist(strNeedsProtection), "^\\s*,\\s*$", negate=T) ->
+    strNeedsProtection
   stringr::str_which(
     string,
     pattern_strProtect

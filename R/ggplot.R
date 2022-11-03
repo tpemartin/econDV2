@@ -146,9 +146,11 @@ get_serverText <- function(plotcopy, inputs, input_names){
         stringr::fixed(protectedPlotCopy$reverseReplacePattern)
       ) -> serverText
   }
-
-  serverText |>
-    styler::style_text() -> serverText
+  tryCatch(
+  {serverText |>
+    styler::style_text()},
+  error=function(e){
+    serverText})-> serverText
   return(serverText)
 }
 
