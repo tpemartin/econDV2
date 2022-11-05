@@ -36,6 +36,9 @@ geom_sf_taiwan(
 
 \item{background.size}{the size of boundary of background map}
 }
+\value{
+
+}
 \description{
 Generate Taiwan choropleth map to city or township level without any map supplied
 }

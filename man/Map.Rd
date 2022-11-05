@@ -6,6 +6,9 @@
 \usage{
 Map()
 }
+\value{
+
+}
 \description{
 Construct map object for various map related tools
 }

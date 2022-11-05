@@ -9,6 +9,9 @@ Object(objectname)
 \arguments{
 \item{objectname}{A symbol or a character}
 }
+\value{
+
+}
 \description{
 Initiate an object with self saving method.
 }

@@ -6,6 +6,9 @@
 \usage{
 Maintenance()
 }
+\value{
+
+}
 \description{
 Create an package mainenance instance
 }

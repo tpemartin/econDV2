@@ -14,6 +14,15 @@ Plot = function(){
   }
   return(gg)
 }
+#' Collection of ggplot personal designs
+#'
+#' @return
+#' @export
+#'
+#' @examples \donotrun{
+#' makeup = econDV2::Makeup()
+#' plt$theme = makeup$theme()
+#' }
 Makeup = function(){
   makeup = new.env()
   makeup$geom_col = function(...){

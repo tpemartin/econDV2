@@ -6,6 +6,9 @@
 \usage{
 ggbrowse()
 }
+\value{
+
+}
 \description{
 Browse ggplot2 layers
 }

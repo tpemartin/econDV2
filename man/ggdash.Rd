@@ -6,6 +6,9 @@
 \usage{
 ggdash()
 }
+\value{
+
+}
 \description{
 Any preceding lines that are necessary for the ggplot must be followed by five # sign, i.e. #####, for the program to distinguish which part is make condition, which is ggplot code.
 }

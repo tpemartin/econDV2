@@ -2,8 +2,6 @@
 #'
 #' @return
 #' @export
-#'
-#' @examples none
 setup_environment <- function(){
   create_project_if_necessary() -> projectPath
 

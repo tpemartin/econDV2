@@ -11,6 +11,9 @@ get_switching_regime_dataframe(.df, targetColumns)
 
 \item{targetColumns}{a named character as c("x"="x in .df", "y"="y in .df", "y2"="y2 in .df") where "zzz in .df" means column name in .df that represents zzz vector for switching regime dataset construction.}
 }
+\value{
+
+}
 \description{
 The function augement a dataset with three more columns, ymin, ymax and regime, where ymin and ymax are pmin and pmax of y and y2, regime tells y>=y2 or y<=y2 happens. In addition, interpolated x observations are inserted to prevent void area in geom_ribbon usage when x is discreate
 }
