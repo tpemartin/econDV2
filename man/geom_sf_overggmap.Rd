@@ -11,9 +11,6 @@ geom_sf_overggmap(data = data, ...)
 
 \item{...}{others that pass to regular geom_sf}
 }
-\value{
-
-}
 \description{
 A enhanced geom_sf for overlaying a gg object produced by ggmap2
 }

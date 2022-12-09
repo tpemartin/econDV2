@@ -9,9 +9,6 @@ geom_sec_axis(geom_fn)
 \arguments{
 \item{geom_fn}{a geom function}
 }
-\value{
-
-}
 \description{
 Generate geom function for secondary axis y on the right
 }

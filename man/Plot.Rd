@@ -6,9 +6,6 @@
 \usage{
 Plot()
 }
-\value{
-
-}
 \description{
 initiate a plot instance for ggplot
 }

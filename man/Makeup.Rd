@@ -6,9 +6,6 @@
 \usage{
 Makeup()
 }
-\value{
-
-}
 \description{
 Collection of ggplot personal designs
 }

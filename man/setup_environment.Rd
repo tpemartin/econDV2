@@ -6,9 +6,6 @@
 \usage{
 setup_environment()
 }
-\value{
-
-}
 \description{
 Setup environment including .Rprofile
 }
