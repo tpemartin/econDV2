@@ -1,7 +1,7 @@
 Package: econDV2
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.3.8
+Version: 0.3.9
 Author: Who wrote it
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
@@ -22,9 +22,11 @@ Imports:
     purrr,
     rclipboard,
     rlang,
+    rstudioapi,
     servr,
     shiny,
     stringr,
-    styler
+    styler,
+    targets
 Depends: 
     R (>= 4.1.0)

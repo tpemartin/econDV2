@@ -28,3 +28,13 @@ Description: New Addin Description
 Binding: serveJupyterNotebook
 Interactive: false
 
+Name: Make plot at cursor
+Description: New Addin Description
+Binding: makePlotAtCursor
+Interactive: false
+
+Name: Save plot at cursor
+Description: New Addin Description
+Binding: savePlotAtCursor
+Interactive: false
+
