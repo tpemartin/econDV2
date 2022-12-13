@@ -8,9 +8,12 @@ Plot = function(){
   gg$geom = list()
   gg$others = list()
   gg$make = function(){
-    names(gg) |> setdiff(c("ggplot","geom", "make"))-> components
+    names(gg) |>
+      stringr::str_subset("geom") |>
+      sort() -> geomNames
+    names(gg) |> setdiff(c("ggplot",geomNames, "make"))-> components
     gglist = as.list(gg)
-    gglist[c("ggplot", "geom", components)] |> purrr::reduce(`+`)
+    gglist[c("ggplot", geomNames, components)] |> purrr::reduce(`+`)
   }
   return(gg)
 }

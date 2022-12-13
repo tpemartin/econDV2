@@ -10,10 +10,21 @@ makePlotAtCursor = function(){
     targetSymbol = as.symbol(target)
     expr = rlang::expr(print((!!targetSymbol)$make()))
     env <- list(target = targetSymbol)
-    eval(substitute(targets::tar_load(target, envir = globalenv()),
-                    env = env))
+    tryCatch(
+      {
+        eval(substitute(targets::tar_load(target, envir = globalenv()),
+                        env = .GlobalEnv))
+      },
+      error=function(e){
+        warning('There is an error. ')
+      }
+    )
+
     eval(expr, env=.GlobalEnv)
   }
+  clipr::write_clip(
+    paste0(target,"$make()")
+  )
   invisible(target)
 }
 savePlotAtCursor = function(){
@@ -25,5 +36,25 @@ savePlotAtCursor = function(){
   )
   wd |> stringr::str_extract_all("[0-9]+") |> unlist() |>
     as.numeric() -> wd
-  rstudioapi::savePlotAsImage(file=paste0(target,".png"), format="png", wd[[1]],wd[[2]])
+
+  fm <- rstudioapi::showPrompt(
+    title="Format",
+    message = c('Set graph format "png", "jpeg", "bmp", "tiff", "emf", "svg", "eps"'),
+    default = c("png")
+  )
+  filename = paste0(target,".",fm)
+  if(file.exists(filename)) file.remove(filename)
+  rstudioapi::savePlotAsImage(file=filename, format=fm, wd[[1]],wd[[2]])
+  clipr::write_clip(
+    paste0(target,"$make()")
+  )
+}
+getCursorTarget = function(){
+  if(!require(targets)){
+    install.packages("targets")}
+  if(!require(rstudioapi)){
+    install.packages("rstudioapi")}
+  context <- rstudioapi::getActiveDocumentContext()
+  target <- targets:::rstudio_symbol_at_cursor(context)
+  return(target)
 }
