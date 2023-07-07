@@ -24,7 +24,7 @@ extract_city_township <- function( address) {
   data.frame(
     city=cities,
     township=townships,
-    address = addresses
+    address = address
   )
 }
 create_project_if_necessary <- function(){
