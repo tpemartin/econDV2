@@ -1,3 +1,32 @@
+#' Extract cities and townships from addresses
+#'
+#' @param address a character vector of addresses starting from city, then township
+#'
+#' @return a data frame of city, township, and address
+#' @export
+extract_city_township <- function( address) {
+
+  address |>
+    stringr::str_extract("[\u4E00-\u9FFF]+") -> addresses
+  addresses |>
+    stringr::str_replace_all("台","臺") |>
+    stringr::str_replace_all("镇","鎮")-> addresses
+  addresses |>
+    stringr::str_sub(1,3) -> cities
+  addresses
+  addresses |>
+    stringr::str_sub(4) -> addressesShorten
+  addressesShorten
+  addressesShorten |>
+    stringr::str_extract(
+      "[^鄉市區]+[鄉鎮市區](?!區)"
+    ) -> townships
+  data.frame(
+    city=cities,
+    township=townships,
+    address = addresses
+  )
+}
 create_project_if_necessary <- function(){
   projectFolder <- rstudioapi::getActiveProject()
   if(is.null(projectFolder)){
