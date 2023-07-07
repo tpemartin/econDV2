@@ -5,21 +5,22 @@
 #' @return a data frame of city, township, and address
 #' @export
 extract_city_township <- function( address) {
-
   address |>
     stringr::str_extract("[\u4E00-\u9FFF]+") -> addresses
   addresses |>
     stringr::str_replace_all("台","臺") |>
     stringr::str_replace_all("镇","鎮")-> addresses
+  # addresses = '台中市中區三民路二段第二市場'
   addresses |>
-    stringr::str_sub(1,3) -> cities
-  addresses
+    # 縣市結尾最多不超過三個字元,縣市名稱不帶有縣或市
+    stringr::str_extract("[^縣市]{1,2}[縣市]") -> cities
   addresses |>
-    stringr::str_sub(4) -> addressesShorten
-  addressesShorten
+    stringr::str_remove(
+      "[^縣市]{1,2}[縣市]"
+    ) -> addressesShorten
   addressesShorten |>
     stringr::str_extract(
-      "[^鄉市區]+[鄉鎮市區](?!區)"
+      "[^縣鄉市區][^鄉市區]{0,2}[鄉鎮市區](?!區)"
     ) -> townships
   data.frame(
     city=cities,
