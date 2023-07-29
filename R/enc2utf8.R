@@ -9,7 +9,7 @@ enc2utf8_all <- function(.sf){
 get_sf_taiwan4windows <- function(){
   econDV2::sf_taiwan_simplified -> sf_taiwan_simplified
   names(sf_taiwan_simplified) <-
-    c("縣市", "鄉鎮區", "台灣本島")
+    c("縣市", "鄉鎮區", "台灣本島", "離島")
   sf_taiwan_simplified[c(1,2)] |>
     purrr::map(enc2utf8_all) -> sf_taiwan_simplified[c(1,2)]
 
