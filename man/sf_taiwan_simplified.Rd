@@ -7,7 +7,7 @@
 The data set is obtained from OSM, and
 is simplified}
 \format{
-An object of class \code{list} of length 3.
+An object of class \code{list} of length 4.
 }
 \usage{
 sf_taiwan_simplified
