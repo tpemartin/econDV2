@@ -86,7 +86,8 @@ augment_county_to_sf_dataframe <- function(df, sf_county) {
     seq_along(countiesInclude),
     ~{
       targetCounty = sf_county[.x,]$name
-      dataEnv$df[countiesInclude[[.x]],]$county = targetCounty
+      # dataEnv$df[countiesInclude[[.x]],]$county = targetCounty
+      dataEnv$df$county[countiesInclude[[.x]]] = targetCounty
     }
   )
   return(dataEnv$df)
